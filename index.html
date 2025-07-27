@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج البكالوريا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>نتائج البكالوريا</h1>
+            </div>
+            <p>ادخل رقم التسجيل الخاص بك لمعرفة النتيجة</p>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="studentId" placeholder="أدخل رقم التسجيل...">
+            <button id="searchBtn"><i class="fas fa-search"></i> بحث</button>
+        </div>
+        
+        <div class="result-container hidden" id="resultContainer">
+            <div class="result-card">
+                <div class="student-info">
+                    <div class="avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="details">
+                        <h2 id="studentName">الاسم: </h2>
+                        <p id="examType">الشعبة: </p>
+                        <p id="resultStatus">القرار: </p>
+                        <p id="Moy_Bac">المعدل: </p>
+                    </div>
+                </div>
+                
+                <div class="school-info">
+                    <div class="info-box">
+                        <i class="fas fa-school"></i>
+                        <div>
+                            <h3>المدرسة</h3>
+                            <p id="schoolName">-</p>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>المركز</h3>
+                            <p id="centerName">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-flag"></i>
+                        <div>
+                            <h3>الولاية</h3>
+                            <p id="stateName">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="empty-state hidden" id="emptyState">
+            <i class="fas fa-search"></i>
+            <p>ادخل رقم التسجيل لمعرفة النتيجة</p>
+        </div>
+        
+        <div class="not-found hidden" id="notFound">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>لا توجد نتائج مطابقة لرقم التسجيل هذا</p>
+            <button id="tryAgainBtn">المحاولة مرة أخرى</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
