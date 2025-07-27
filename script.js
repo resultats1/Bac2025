@@ -104,7 +104,8 @@ if (decision.includes("Admis Sn")) {
 }
      Moy_Bac.textContent = `المعدل: ${data.Moy_Bac || 'غير متوفر'}`;
     schoolName.textContent = data.Etablissement_AR || 'غير متوفر';
-    centerName.textContent = data["Centre Examen_AR"] || data["Centre Examen_AR"] || 'غير متوفر';
+     centerName.textContent = data.CentreExamenAR ||  'غير متوفر';
+  
     stateName.textContent = data.Wilaya_AR || 'غير متوفر';
     
     resultContainer.classList.remove('hidden');
