@@ -14,29 +14,33 @@ const schoolName = document.getElementById('schoolName');
 const centerName = document.getElementById('centerName');
 const stateName = document.getElementById('stateName');
 
-// متغير لتخزين بيانات الطلاب
-let studentsData = [];
+// متغير لتخزين البيانات بشكل سريع
+let studentsMap = {}; // ⬅ هذا بدلًا من Array
 
-// جلب البيانات من ملف JSON
+// جلب البيانات من ملف JSON وتحويلها إلى Object Map
 fetch('data.json')
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
     })
     .then(data => {
         if (!Array.isArray(data)) {
-            console.error("Les données ne sont pas un tableau:", data);
-            throw new Error('Format de données invalide');
+            console.error("البيانات ليست في شكل مصفوفة:", data);
+            throw new Error('تنسيق البيانات غير صحيح');
         }
-        studentsData = data;
-        console.log("Données chargées avec succès. Nombre d'étudiants:", studentsData.length);
-        console.log("Exemple de données:", studentsData[0]);
+
+        // تحويل المصفوفة إلى كائن بحث سريع
+        data.forEach(student => {
+            if (student.Num_Bac) {
+                studentsMap[student.Num_Bac.toString().trim()] = student;
+            }
+        });
+
+        console.log("✅ تم تحميل وتحويل البيانات بنجاح. عدد الطلاب:", Object.keys(studentsMap).length);
     })
     .catch(error => {
-        console.error("Erreur de chargement des données:", error);
-        alert("Erreur de chargement des données. Veuillez réessayer plus tard.");
+        console.error("❌ خطأ أثناء تحميل البيانات:", error);
+        alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
     });
 
 // زر البحث
@@ -47,71 +51,58 @@ tryAgainBtn.addEventListener('click', resetSearch);
 
 // البحث عند الضغط على Enter
 studentIdInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        searchResult();
-    }
+    if (e.key === 'Enter') searchResult();
 });
 
-// دالة البحث
+// دالة البحث السريع باستخدام object map
 function searchResult() {
     const studentId = studentIdInput.value.trim();
-    console.log("Recherche pour l'ID:", studentId);
-    
+    console.log("🔍 البحث عن الرقم:", studentId);
+
     hideAllMessages();
-    
+
     if (!studentId) {
         emptyState.classList.remove('hidden');
         return;
     }
-    
-    if (!studentsData || studentsData.length === 0) {
+
+    if (Object.keys(studentsMap).length === 0) {
         alert("البيانات لم يتم تحميلها بعد، يرجى الانتظار...");
-        console.error("Données non chargées");
         return;
     }
-    
-    // Recherche insensible à la casse et avec trim
-    const foundStudent = studentsData.find(student => {
-        return student.Num_Bac && student.Num_Bac.toString().trim() === studentId;
-    });
-    
-    console.log("Résultat de la recherche:", foundStudent);
-    
+
+    const foundStudent = studentsMap[studentId];
+
     if (foundStudent) {
         displayResult(foundStudent);
     } else {
-        console.warn("Aucun étudiant trouvé avec l'ID:", studentId);
         notFound.classList.remove('hidden');
     }
 }
 
 // عرض النتيجة
 function displayResult(data) {
-    console.log("Affichage des résultats pour:", data);
-    
-    studentName.textContent = `الاسم: ${data.NOM_AR || 'غير متوفر'}`;
-    examType.textContent = `الشعبة: ${data.Serie_AR || 'غير متوفر'}`;
-    
-const decision = data.Decision || '';
-if (decision.includes("Admis Sn")) {
-    resultStatus.innerHTML =` القرار: <span class="success">ناجح</span>`;
-} else if (decision.includes("Sessionnaire")) {
-    resultStatus.innerHTML =` القرار: <span class="warning"> الدورة التكميلية</span>`;
-} else if (decision.includes("Ajourné Sn")) {
-    resultStatus.innerHTML =` القرار: <span class="danger">راسب</span>`;
-} else {
-    resultStatus.innerHTML =` القرار: <span class="danger">راسب</span>`;
-}
-     Moy_Bac.textContent = `المعدل: ${data.Moy_Bac || 'غير متوفر'}`;
+    studentName.textContent =`  الاسم: ${data.NOM_AR || 'غير متوفر'}`;
+    examType.textContent =` الشعبة: ${data.Serie_AR || 'غير متوفر'}`;
+
+    const decision = data.Decision || '';
+    if (decision.includes("Admis Sn")) {
+        resultStatus.innerHTML =` القرار: <span class="success">ناجح</span>`;
+    } else if (decision.includes("Sessionnaire")) {
+        resultStatus.innerHTML =` القرار: <span class="warning">الدورة التكميلية</span>`;
+    } else {
+        resultStatus.innerHTML =` القرار: <span class="danger">راسب</span>`;
+    }
+
+    Moy_Bac.textContent =` المعدل: ${data.Moy_Bac || 'غير متوفر'}`;
     schoolName.textContent = data.Etablissement_AR || 'غير متوفر';
-     centerName.textContent = data.CentreExamenAR ||  'غير متوفر';
-  
+    centerName.textContent = data.CentreExamenAR || 'غير متوفر';
     stateName.textContent = data.Wilaya_AR || 'غير متوفر';
-    
+
     resultContainer.classList.remove('hidden');
 }
 
-// إخفاء جميع الرسائل
+// إخفاء كل الرسائل
 function hideAllMessages() {
     emptyState.classList.add('hidden');
     notFound.classList.add('hidden');
