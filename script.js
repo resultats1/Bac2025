@@ -94,7 +94,7 @@ function displayResult(data) {
         resultStatus.innerHTML =` القرار: <span class="danger">راسب</span>`;
     }
 
-     Moy_Bac.textContent =` المعدل: ${data.Moy_Bac ? parseFloat(data.Moy_Bac).toFixed(2) : 'غير متوفر'}`;
+    Moy_Bac.textContent =` المعدل: ${data.Moy_Bac ? parseFloat(data.Moy_Bac).toFixed(2) : 'غير متوفر'}`;
     schoolName.textContent = data.Etablissement_AR || 'غير متوفر';
     centerName.textContent = data.CentreExamenAR || 'غير متوفر';
     stateName.textContent = data.Wilaya_AR || 'غير متوفر';
