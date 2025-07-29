@@ -134,7 +134,8 @@ function showTopStudents() {
     html += `
         <li>
             <strong>${serie}</strong> - ${student.NOM_AR || "???"}<br>
-            <span>المعدل: ${parseFloat(student.Moy_Bac).toFixed(2)}</span>
+            <span>المعدل: ${parseFloat(student.Moy_Bac).toFixed(2)}</span><br>
+                 <span>المدرسة: ${student.Etablissement_AR || "غير متوفر"}</span>
         </li>
     `;
 });
