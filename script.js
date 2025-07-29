@@ -54,6 +54,7 @@ function searchResult() {
     console.log("🔍 البحث عن الرقم:", studentId);
 
     hideAllMessages();
+    topStudentsContainer.style.display = "none"; // ✅ إخفاء الأوائل دائمًا عند البحث
 
     if (!studentId) {
         emptyState.classList.remove('hidden');
@@ -69,7 +70,6 @@ function searchResult() {
 
     if (foundStudent) {
         displayResult(foundStudent);
-        topStudentsContainer.style.display = "none"; // ✅ إخفاء الأوائل
     } else {
         notFound.classList.remove('hidden');
     }
@@ -129,16 +129,16 @@ function showTopStudents() {
 
     let html = "<h3>الأوائل من كل شعبة</h3><ul>";
 
-     Object.keys(topStudents).forEach(serie => {
-    const student = topStudents[serie];
-    html += `
-        <li>
-            <strong>${serie}</strong> - ${student.NOM_AR || "???"}<br>
-            <span>المعدل: ${parseFloat(student.Moy_Bac).toFixed(2)}</span><br>
-                 <span>المدرسة: ${student.Etablissement_AR || "غير متوفر"}</span>
-        </li>
-    `;
-});
+    Object.keys(topStudents).forEach(serie => {
+        const student = topStudents[serie];
+        html += `
+            <li>
+                <strong>${serie}</strong> - ${student.NOM_AR || "???"}<br>
+                <span>المعدل: ${parseFloat(student.Moy_Bac).toFixed(2)}</span><br>
+                <span>المدرسة: ${student.Etablissement_AR || "غير متوفر"}</span>
+            </li>
+        `;
+    });
 
     html += "</ul>";
     topStudentsContainer.innerHTML = html;
