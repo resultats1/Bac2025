@@ -129,10 +129,15 @@ function showTopStudents() {
 
     let html = "<h3>الأوائل من كل شعبة</h3><ul>";
 
-    Object.keys(topStudents).forEach(serie => {
-        const student = topStudents[serie];
-        html += `<li><strong>${serie}</strong> - ${student.NOM_AR || "???"} - المعدل: ${parseFloat(student.Moy_Bac).toFixed(2)}</li>`;
-    });
+     Object.keys(topStudents).forEach(serie => {
+    const student = topStudents[serie];
+    html += `
+        <li>
+            <strong>${serie}</strong> - ${student.NOM_AR || "???"}<br>
+            <span>المعدل: ${parseFloat(student.Moy_Bac).toFixed(2)}</span>
+        </li>
+    `;
+});
 
     html += "</ul>";
     topStudentsContainer.innerHTML = html;
