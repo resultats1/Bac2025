@@ -4,6 +4,7 @@ const resultContainer = document.getElementById('resultContainer');
 const emptyState = document.getElementById('emptyState');
 const notFound = document.getElementById('notFound');
 const tryAgainBtn = document.getElementById('tryAgainBtn');
+const topStudentsContainer = document.getElementById('topStudents');
 
 // عناصر النتيجة
 const studentName = document.getElementById('studentName');
@@ -14,47 +15,40 @@ const schoolName = document.getElementById('schoolName');
 const centerName = document.getElementById('centerName');
 const stateName = document.getElementById('stateName');
 
-// متغير لتخزين البيانات بشكل سريع
-let studentsMap = {}; // ⬅ هذا بدلًا من Array
+let studentsMap = {};
+let allStudentsArray = [];
 
-// جلب البيانات من ملف JSON وتحويلها إلى Object Map
+// تحميل البيانات
 fetch('data.json')
     .then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
     })
     .then(data => {
-        if (!Array.isArray(data)) {
-            console.error("البيانات ليست في شكل مصفوفة:", data);
-            throw new Error('تنسيق البيانات غير صحيح');
-        }
+        if (!Array.isArray(data)) throw new Error('تنسيق البيانات غير صحيح');
 
-        // تحويل المصفوفة إلى كائن بحث سريع
+        allStudentsArray = data;
+
         data.forEach(student => {
             if (student.Num_Bac) {
                 studentsMap[student.Num_Bac.toString().trim()] = student;
             }
         });
 
-        console.log("✅ تم تحميل وتحويل البيانات بنجاح. عدد الطلاب:", Object.keys(studentsMap).length);
+        console.log("✅ تم تحميل البيانات. عدد الطلاب:", Object.keys(studentsMap).length);
+        showTopStudents(); // ✅ عرض الأوائل عند التحميل
     })
     .catch(error => {
-        console.error("❌ خطأ أثناء تحميل البيانات:", error);
-        alert("حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقًا.");
+        console.error("❌ خطأ في تحميل البيانات:", error);
+        alert("حدث خطأ أثناء تحميل البيانات. حاول لاحقًا.");
     });
 
-// زر البحث
 searchBtn.addEventListener('click', searchResult);
-
-// زر المحاولة مرة أخرى
 tryAgainBtn.addEventListener('click', resetSearch);
-
-// البحث عند الضغط على Enter
 studentIdInput.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') searchResult();
 });
 
-// دالة البحث السريع باستخدام object map
 function searchResult() {
     const studentId = studentIdInput.value.trim();
     console.log("🔍 البحث عن الرقم:", studentId);
@@ -67,7 +61,7 @@ function searchResult() {
     }
 
     if (Object.keys(studentsMap).length === 0) {
-        alert("البيانات لم يتم تحميلها بعد، يرجى الانتظار...");
+        alert("البيانات لم تُحمّل بعد.");
         return;
     }
 
@@ -75,26 +69,27 @@ function searchResult() {
 
     if (foundStudent) {
         displayResult(foundStudent);
+        topStudentsContainer.style.display = "none"; // ✅ إخفاء الأوائل
     } else {
         notFound.classList.remove('hidden');
     }
 }
 
-// عرض النتيجة
 function displayResult(data) {
-    studentName.textContent =`  الاسم: ${data.NOM_AR || 'غير متوفر'}`;
-    examType.textContent =` الشعبة: ${data.Serie_AR || 'غير متوفر'}`;
+    studentName.textContent = ` الاسم: ${data.NOM_AR || 'غير متوفر'}`;
+    examType.textContent = ` الشعبة: ${data.Serie_AR || 'غير متوفر'}`;
 
     const decision = data.Decision || '';
     if (decision.includes("Admis Sn")) {
-        resultStatus.innerHTML =` القرار: <span class="success">ناجح</span>`;
+        resultStatus.innerHTML = ` القرار: <span class="success">ناجح</span>`;
     } else if (decision.includes("Sessionnaire")) {
-        resultStatus.innerHTML =` القرار: <span class="warning">الدورة التكميلية</span>`;
+        resultStatus.innerHTML = ` القرار: <span class="warning">الدورة التكميلية</span>`;
     } else {
-        resultStatus.innerHTML =` القرار: <span class="danger">راسب</span>`;
+        resultStatus.innerHTML = ` القرار: <span class="danger">راسب</span>`;
     }
 
-    Moy_Bac.textContent =` المعدل: ${data.Moy_Bac ? parseFloat(data.Moy_Bac).toFixed(2) : 'غير متوفر'}`;
+    const moy = parseFloat(data.Moy_Bac);
+    Moy_Bac.textContent = ` المعدل: ${isNaN(moy) ? 'غير متوفر' : moy.toFixed(2)}`;
     schoolName.textContent = data.Etablissement_AR || 'غير متوفر';
     centerName.textContent = data.CentreExamenAR || 'غير متوفر';
     stateName.textContent = data.Wilaya_AR || 'غير متوفر';
@@ -102,16 +97,45 @@ function displayResult(data) {
     resultContainer.classList.remove('hidden');
 }
 
-// إخفاء كل الرسائل
 function hideAllMessages() {
     emptyState.classList.add('hidden');
     notFound.classList.add('hidden');
     resultContainer.classList.add('hidden');
 }
 
-// إعادة تعيين البحث
 function resetSearch() {
     studentIdInput.value = '';
     hideAllMessages();
+    resultContainer.classList.add('hidden');
+    topStudentsContainer.style.display = "block"; // ✅ إظهار الأوائل من جديد
     studentIdInput.focus();
 }
+
+// ✅ عرض الأوائل حسب كل شعبة
+function showTopStudents() {
+    if (!Array.isArray(allStudentsArray)) return;
+
+    const topStudents = {};
+
+    allStudentsArray.forEach(student => {
+        const serie = student.Serie_AR;
+        const moy = parseFloat(student.Moy_Bac);
+        if (!serie || isNaN(moy)) return;
+
+        if (!topStudents[serie] || moy > parseFloat(topStudents[serie].Moy_Bac)) {
+            topStudents[serie] = student;
+        }
+    });
+
+    let html = "<h3>الأوائل من كل شعبة</h3><ul>";
+
+    Object.keys(topStudents).forEach(serie => {
+        const student = topStudents[serie];
+        html += `<li><strong>${serie}</strong> - ${student.NOM_AR || "???"} - المعدل: ${parseFloat(student.Moy_Bac).toFixed(2)}</li>`;
+    });
+
+    html += "</ul>";
+    topStudentsContainer.innerHTML = html;
+    topStudentsContainer.style.display = "block";
+}
+
