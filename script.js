@@ -89,7 +89,8 @@ function displayResult(data) {
     }
 
     const moy = parseFloat(data.Moy_Bac);
-    Moy_Bac.textContent = ` المعدل: ${isNaN(moy) ? 'غير متوفر' : moy.toFixed(2)}`;
+    const truncated = Math.floor(moy * 100) / 100;
+Moy_Bac.textContent = ` المعدل: ${isNaN(moy) ? 'غير متوفر' : truncated.toFixed(2)}`;
     schoolName.textContent = data.Etablissement_AR || 'غير متوفر';
     centerName.textContent = data.CentreExamenAR || 'غير متوفر';
     stateName.textContent = data.Wilaya_AR || 'غير متوفر';
