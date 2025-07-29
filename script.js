@@ -144,4 +144,3 @@ function showTopStudents() {
     topStudentsContainer.innerHTML = html;
     topStudentsContainer.style.display = "block";
 }
-
