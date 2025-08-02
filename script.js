@@ -40,7 +40,7 @@ fetch('data.json')
     })
     .catch(error => {
         console.error("❌ خطأ في تحميل البيانات:", error);
-        alert("حدث خطأ أثناء تحميل البيانات. حاول لاحقًا.");
+        alert("سيتم الاعلان عن النتائج قريبا");
     });
 
 searchBtn.addEventListener('click', searchResult);
