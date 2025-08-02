@@ -80,7 +80,7 @@ function displayResult(data) {
     examType.textContent = ` الشعبة: ${data.Serie_AR || 'غير متوفر'}`;
 
     const decision = data.Decision || '';
-    if (decision.includes("Admis Sn")) {
+    if (decision.includes("Admis(e)")) {
         resultStatus.innerHTML = ` القرار: <span class="success">ناجح</span>`;
     } else if (decision.includes("Sessionnaire")) {
         resultStatus.innerHTML = ` القرار: <span class="warning">الدورة التكميلية</span>`;
