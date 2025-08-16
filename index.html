@@ -1,181 +1,86 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>عرض بيانات الطالب</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Tajawal', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #333;
-    }
-
-    .container {
-      width: 90%;
-      max-width: 700px;
-      background: white;
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      margin: 2rem;
-    }
-
-    h1 {
-      color: #2c3e50;
-      margin-bottom: 1.5rem;
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    .input-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    input[type="text"] {
-      padding: 12px 15px;
-      width: 60%;
-      min-width: 200px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border 0.3s;
-    }
-
-    input[type="text"]:focus {
-      outline: none;
-      border-color: #3498db;
-    }
-
-    button {
-      padding: 12px 25px;
-      border: none;
-      background-color: #3498db;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    button:hover {
-      background-color: #2980b9;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
-    }
-
-    #result {
-      margin-top: 2rem;
-      animation: fadeIn 0.5s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
-      color: #2c3e50;
-      margin-bottom: 1.5rem;
-      font-size: 1.4rem;
-    }
-
-    table {
-      width: 100%;
-      margin-top: 1.5rem;
-      border-collapse: collapse;
-      background: #f8f9fa;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    th {
-      background-color: #3498db;
-      color: white;
-      padding: 12px;
-      text-align: center;
-      font-weight: 500;
-    }
-
-    td {
-      padding: 12px;
-      border-bottom: 1px solid #e0e0e0;
-      text-align: center;
-      background-color: white;
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .highlight {
-      font-weight: 700;
-      color: #e74c3c;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 1.5rem;
-      }
-      
-      .input-group {
-        flex-direction: column;
-      }
-      
-      input[type="text"] {
-        width: 100%;
-      }
-      
-      button {
-        width: 100%;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج البكالوريا</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>نظام عرض نتائج الطلاب</h1>
-<h2>Moyenne de classement</h2>
-    <div class="input-group">
-      <input type="text" id="studentId" placeholder="أدخل رقم تسجيلك">
-      <button onclick="fetchStudent()">عرض النتائج</button>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>نتائج البكالوريا</h1>
+            </div>
+            <p>ادخل رقم التسجيل الخاص بك لمعرفة النتيجة</p>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" id="studentId" placeholder="أدخل رقم التسجيل...">
+            <button id="searchBtn"><i class="fas fa-search"></i> بحث</button>
+        </div>
+        
+        <div class="result-container hidden" id="resultContainer">
+            <div class="result-card">
+                <div class="student-info">
+                    <div class="avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="details">
+                        <h2 id="studentName">الاسم: </h2>
+                        <p id="examType">الشعبة: </p>
+                        <p id="resultStatus">القرار: </p>
+                        <p id="Moy_Bac">المعدل: </p>
+                    </div>
+                </div>
+                
+                <div class="school-info">
+                    <div class="info-box">
+                        <i class="fas fa-school"></i>
+                        <div>
+                            <h3>المدرسة</h3>
+                            <p id="schoolName">-</p>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>المركز</h3>
+                            <p id="centerName">-</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-flag"></i>
+                        <div>
+                            <h3>الولاية</h3>
+                            <p id="stateName">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="empty-state hidden" id="emptyState">
+            <i class="fas fa-search"></i>
+            <p>ادخل رقم التسجيل لمعرفة النتيجة</p>
+        </div>
+        
+        <div class="not-found hidden" id="notFound">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>لا توجد نتائج مطابقة لرقم التسجيل هذا</p>
+            <button id="tryAgainBtn">المحاولة مرة أخرى</button>
+        </div>
     </div>
     
-    <div id="result" class="hidden">
-      <h2 id="name"></h2>
-      <table>
-        <tr><th>MS1</th><td id="ms1"></td></tr>
-        <tr><th>MS2</th><td id="ms2"></td></tr>
-        <tr><th>MS3</th><td id="ms3"></td></tr>
-        <tr><th>MS4</th><td id="ms4"></td></tr>
-        <tr><th>MS5</th><td id="ms5"></td></tr>
-        <tr><th>MS6</th><td id="ms6"></td></tr>
-        <tr><th>المعدل العام <br>(MG)</th><td id="mg" class="highlight"></td></tr>
-        <tr><th>ترتيبك في القسم <br>(Rang)</th><td id="rang"></td></tr>
-        <tr><th>التقدير<br>Mention</th><td id="mention"></td></tr>
-      </table>
-    </div>
-  </div>
-
-  <script src="xy.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
